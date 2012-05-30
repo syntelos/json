@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<project name="json" default="update">
+
+  <property name="src"     location="src"/>
+  <property name="lib"     location="lib"/>
+  <property name="bin"     location="bin"/>
+  <property name="dst"     location="."/>
+  <property name="ver"     location="ver"/>
+
+  <property name="compiler.source" value="1.6"/>
+  <property name="compiler.target" value="1.6"/>
+  <property name="compiler.encoding" value="UTF-8"/>
+
+  <import file="ant/build.in.version.xml"/>
+  <property file="${user.home}/update.properties"/>
+  <import file="ant/build.in.update.xml"/>
+
+
+  <target name="update" if="json.update" depends="jar" description="Copy jar product to targets defined in '{user.home}/update.properties' by name 'json.update'.">
+
+    <do-update src="${target.jar}" tgt="${json.update}" />
+  </target>
+
+  <path id="lib.path">
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <target name="jar" depends="compile">
+
+    <delete>
+      <fileset dir="${dst}">
+        <include name="**/${ant.project.name}*.jar"/>
+      </fileset>
+    </delete>
+
+    <jar jarfile="${target.jar}" basedir="${bin}" manifest="${src}/Manifest.mf" />
+
+    <delete>
+      <fileset dir="${bin}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+
+  </target>
+
+  <target name="compile" depends="version">
+
+    <mkdir dir="${bin}"/>
+
+    <javac srcdir="${src}" destdir="${bin}" debug="true" includeantruntime="false" source="${compiler.source}" target="${compiler.target}" encoding="${compiler.encoding}">
+
+      <include name="**/*.java"/>
+
+      <classpath refid="lib.path"/>
+    </javac>
+
+  </target>
+
+  <target name="clean" description="Drop bin directory">
+
+    <delete dir="${bin}"/>
+
+    <delete>
+      <fileset dir="${dst}">
+        <include name="**/${ant.project.name}*.jar"/>
+      </fileset>
+    </delete>
+
+  </target>
+
+  <target name="version" description="Report current version.">
+    <version/>
+    <property name="target.jar" value="${dst}/${ant.project.name}-${this.version}.jar"/>
+    <property name="test.target.jar" value="${dst}/${ant.project.name}-test-${this.version}.jar"/>
+  </target>
+
+  <target name="build" description="Increment version build number and report result.">
+    <version-build/>
+    <version/>
+    <antcall target="gen"/>
+  </target>
+
+  <target name="major" description="Increment version major number and report result.">
+    <version-major/>
+    <version/>
+    <antcall target="gen"/>
+  </target>
+
+  <target name="minor" description="Increment version minor number and report result.">
+    <version-minor/>
+    <version/>
+    <antcall target="gen"/>
+  </target>
+
+  <target name="gen" depends="version" description="Generate version files from ver to src">
+
+      <copy todir="${src}" overwrite="true">
+        <filterset>
+          <filter token="VersionName" value="${ant.project.name}"/>
+          <filter token="VersionMajor" value="${version.major}"/>
+          <filter token="VersionMinor" value="${version.minor}"/>
+          <filter token="VersionBuild" value="${version.build}"/>
+        </filterset>
+        <fileset dir="${ver}/src">
+          <include name="**/*.java"/>
+        </fileset>
+      </copy>
+  </target>
+
+  <target name="test" depends="test.jar">
+
+    <java jar="${test.target.jar}" fork="true">
+      <arg value="test"/>
+    </java>
+
+  </target>
+
+  <target name="test.jar" depends="test.compile">
+
+    <delete>
+      <fileset dir="${dst}">
+        <include name="**/${ant.project.name}-test-*.jar"/>
+      </fileset>
+    </delete>
+
+    <jar jarfile="${test.target.jar}" basedir="test/bin" manifest="test/src/Manifest.mf">
+
+      <zipfileset src="${target.jar}"/>
+      <!-- zipfileset src="${toString:lib.lxl}"/ -->
+    </jar>
+
+    <delete>
+      <fileset dir="test/bin">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+
+  </target>
+
+  <target name="test.compile" depends="version">
+
+    <mkdir dir="test/bin"/>
+
+    <javac srcdir="test/src" destdir="test/bin" classpath="${target.jar}" debug="true" includeantruntime="false" source="${compiler.source}" target="${compiler.target}" encoding="${compiler.encoding}">
+
+      <include name="**/*.java"/>
+    </javac>
+
+  </target>
+
+</project>

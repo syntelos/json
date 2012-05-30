@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="update" default="debug">
+
+  <property name="compiler.source" value="1.6"/>
+  <property name="compiler.target" value="1.6"/>
+  <property name="compiler.optimize" value="false"/>
+  <property name="compiler.debug" value="true"/>
+  <property name="compiler.deprecation" value="false"/>
+
+  <property name="src" value="."/>
+
+  <property file="${user.home}/update.properties"/>
+
+  <target name="debug" if="update.update" depends="compile" description="Dry run debug of this update.">
+
+    <java classname="Update" fork="true" failonerror="true">
+      <jvmarg value="-DDebug=X"/>
+      <arg value="build.xml:Update.java:Update.class"/>
+      <arg value="${update.update}"/>
+    </java>
+  </target>
+
+  <target name="update" if="update.update" depends="compile" description="Copy products to locations defined in '{user.home}/update.properties' name 'update.update'.">
+
+    <java classname="Update" fork="true" failonerror="true">
+
+      <arg value="build.xml:Update.java:Update.class"/>
+      <arg value="${update.update}"/>
+    </java>
+  </target>
+
+  <target name="compile">
+
+    <javac srcdir="${src}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           debug="${compiler.debug}"
+           source="${compiler.source}"
+           target="${compiler.target}"
+           failonerror="true"
+	   includeAntRuntime="false"/>
+
+  </target>
+
+</project>
