@@ -21,55 +21,6 @@ package json;
 
 /**
  * <h3><a href="http://www.json.org">JSON</a> network format</h3>
- *
- * <p> A JSON entity can be one of the following: an object, array,
- * string, number, boolean, or null.  These are indicated by the
- * following type methods: {@link #isObject()}, {@link
- * #isArray()},{@link #isNumber()},{@link #isBoolean()},{@link
- * #isString()}, and {@link #isNull()}.  </p>
- * 
- * <h3>Value</h3>
- * 
- * <p> The underlying value of an instance of <code>Json</code> is
- * available from the {@link #getValue()} method, or one of the
- * <code>asXXX</code> methods.  For example, {@link #asBoolean()} or
- * {@link #asString()}.  </p>
- * 
- * <h3>Copy</h3>
- * 
- * <p> The method {@link #asMap()} performs a deep copy of the
- * underlying map, unwrapping every nested Json entity to its Java
- * representation.  Conversely the method {@link #asJsonMap()} simply
- * returns the map reference.  The methods {@link #asList()} and
- * {@link #asJsonList()} function analogously.  </p>
- * 
- * <h3>Structure</h3>
- * 
- * <p> Set object properties with {@link #set(String, Object)}.
- * </p>
- *
- * <p> The {@link #add(Object)} method works on arrays, as {@link
- * #delAt(int)}. </p>
- * 
- * <p> The {@link #delAt(String)} method works on objects. </p>
- *
- * <p> The {@link #remove(Object)} method works on arrays or
- * objects. </p>
- *
- * <p> To return the removed, use {@link #atDel(int)} or {@link
- * #atDel(String)}.  </p>
- * 
- * <p> To add properties to an object in bulk, or append a sequence of
- * elements to array, use {@link #with(Json)}.  Called on an object,
- * this method copies the argument object properties into itself.
- * Called on an array, this method copies the members of the argument
- * array into itself.  </p>
- * 
- * <p> The {@link #at(int)} method returns the array element at the
- * specified index, and the {@link #at(String)} method does the same
- * for a property of an object instance. The method {@link #at(String,
- * Object)} will create an object property with a default value if it
- * doesn't exist already.  </p>
  * 
  * 
  * @author Borislav Iordanov
@@ -80,6 +31,10 @@ public abstract class Json
     extends Object
     implements Cloneable
 {
+    public static Json Decode(String json){
+
+        return (Json)((new Reader()).read(json));
+    }
     public static String Encode(Json json){ 
 
         return json.toString();
@@ -108,6 +63,12 @@ public abstract class Json
 
         else if (object.getClass().isArray())
             return new ArrayJson((Object[])object);
+
+        else if (object instanceof lxl.Map)
+            return new ObjectJson( (lxl.Map)object);
+
+        else if (object instanceof java.util.Map)
+            return new ObjectJson( (java.util.Map)object);
 
         else {
             final Primitive primitive = Primitive.For(object.getClass());

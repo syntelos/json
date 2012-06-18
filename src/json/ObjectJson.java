@@ -46,6 +46,22 @@ public class ObjectJson
                 this.set(args[i].toString(), args[++i]);
         }
     }
+    public ObjectJson(Map map){
+        super();
+
+        for (Object key: map.keySet()){
+
+            this.set( (String)key, map.get(key));
+        }
+    }
+    public ObjectJson(java.util.Map map){
+        super();
+
+        for (java.util.Map.Entry entry : (java.util.Set<java.util.Map.Entry>)map.entrySet()){
+
+            this.set( (String)entry.getKey(), entry.getValue());
+        }
+    }
 
 
     public boolean isNull(){
