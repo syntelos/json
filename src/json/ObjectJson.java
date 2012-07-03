@@ -69,6 +69,10 @@ public class ObjectJson
 
         return this.object.iterator();
     }
+    public Json[] toArray(){
+
+        return this.object.toArray(Json.class);
+    }
     public boolean isNull(){
         return (0 == object.size());
     }

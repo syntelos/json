@@ -55,6 +55,10 @@ public class ArrayJson
 
         return this.list.iterator();
     }
+    public Json[] toArray(){
+
+        return this.list.toArray(Json.class);
+    }
     public boolean isNull(){
         return (0 == list.size());
     }
