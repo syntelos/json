@@ -39,35 +39,35 @@ import java.util.StringTokenizer;
  */
 public abstract class Strings {
 
-    public final static java.lang.Object FromString(Primitive type, java.lang.String string){
+    public final static <T> T FromString(Primitive type, java.lang.String string){
         if (null == string)
             return null;
         else {
             switch(type){
             case String:
-                return string;
+                return (T)string;
             case Boolean:
-                return BooleanFromString(string);
+                return (T)BooleanFromString(string);
             case Byte:
-                return ByteFromString(string);
+                return (T)ByteFromString(string);
             case Character:
-                return CharacterFromString(string);
+                return (T)CharacterFromString(string);
             case Short:
-                return ShortFromString(string);
+                return (T)ShortFromString(string);
             case Integer:
-                return IntegerFromString(string);
+                return (T)IntegerFromString(string);
             case Long:
-                return LongFromString(string);
+                return (T)LongFromString(string);
             case Float:
-                return FloatFromString(string);
+                return (T)FloatFromString(string);
             case Double:
-                return DoubleFromString(string);
+                return (T)DoubleFromString(string);
             case Date:
-                return DateFromString(string);
+                return (T)DateFromString(string);
             case BigInteger:
-                return BigIntegerFromString(string);
+                return (T)BigIntegerFromString(string);
             case BigDecimal:
-                return BigDecimalFromString(string);
+                return (T)BigDecimalFromString(string);
             default:
                 throw new java.lang.IllegalStateException("Unrecognized type "+type.name());
             }

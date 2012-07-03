@@ -49,9 +49,9 @@ public interface Builder
             super();
         }
 
-        public final static Builder Construct(Class<Builder> clas, Json model){
+        public final static <T extends Builder> T Construct(Class<T> clas, Json model){
             try {
-                Constructor<Builder> ctor = clas.getConstructor(Json.class);
+                Constructor<T> ctor = clas.getConstructor(Json.class);
 
                 return ctor.newInstance(model);
             }
@@ -84,12 +84,12 @@ public interface Builder
                     throw new IllegalStateException(clas.getName(),exc);
             }
         }
-        public final static Object Construct(Class clas, String model){
+        public final static <T> T Construct(Class<T> clas, String model){
             if (java.lang.Enum.class.isAssignableFrom(clas)){
                 try {
                     Method valueOf = clas.getMethod("valueOf",String.class);
 
-                    return valueOf.invoke(null,model);
+                    return (T)valueOf.invoke(null,model);
                 }
                 catch (NoSuchMethodException exc){
 
@@ -118,7 +118,7 @@ public interface Builder
             }
             else {
                 try {
-                    Constructor ctor = clas.getConstructor(String.class);
+                    Constructor<T> ctor = clas.getConstructor(String.class);
 
                     return ctor.newInstance(model);
                 }
@@ -152,9 +152,9 @@ public interface Builder
                 }
             }
         }
-        public final static Object Construct(Class clas, Object model){
+        public final static <T> T Construct(Class<T> clas, Object model){
             try {
-                Constructor ctor = clas.getConstructor(model.getClass());
+                Constructor<T> ctor = clas.getConstructor(model.getClass());
 
                 return ctor.newInstance(model);
             }

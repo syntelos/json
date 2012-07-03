@@ -331,12 +331,12 @@ public abstract class Json
      * or arrays), the method will perform a deep copy and extra underlying values recursively 
      * for all nested elements.</p>
      */
-    public Object getValue() { throw new UnsupportedOperationException(); }
+    public <T> T getValue() { throw new UnsupportedOperationException(); }
 
-    public Object getValue(Class clas){
+    public <T> T getValue(Class<T> clas){
         Object value = this.getValue();
         if (null == value || clas.isAssignableFrom(value.getClass()))
-            return value;
+            return (T)value;
         else {
             final Primitive primitive = Primitive.For(clas);
             if (Json.Use(primitive)){
@@ -347,7 +347,7 @@ public abstract class Json
             }
             else if (Builder.class.isAssignableFrom(clas)){
 
-                return Builder.Immutable.Construct( (Class<Builder>)clas, this);
+                return Builder.Immutable.Construct( clas, this);
             }
             else if (value instanceof String)
                 return Builder.Immutable.Construct( clas, (String)value);
@@ -355,9 +355,9 @@ public abstract class Json
                 return Builder.Immutable.Construct( clas, value);
         }
     }
-    public Object getValue(String name){ throw new UnsupportedOperationException(); }
+    public <T> T getValue(String name){ throw new UnsupportedOperationException(); }
 
-    public Object getValue(String name, Class clas){ throw new UnsupportedOperationException(); }
+    public <T> T getValue(String name, Class<T> clas){ throw new UnsupportedOperationException(); }
 
     public Json setValue(String name, Object value){ throw new UnsupportedOperationException(); }
 

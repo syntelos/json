@@ -32,37 +32,37 @@ import java.io.ObjectOutputStream;
  */
 public abstract class Objects {
 
-    public final static java.lang.Object From(Primitive type, java.lang.Object object){
+    public final static <T> T From(Primitive type, java.lang.Object object){
         if (null == object)
             return null;
         else {
             switch(type){
             case String:
-                return StringFromObject(object);
+                return (T)StringFromObject(object);
             case Boolean:
-                return BooleanFromObject(object);
+                return (T)BooleanFromObject(object);
             case Byte:
-                return ByteFromObject(object);
+                return (T)ByteFromObject(object);
             case Character:
-                return CharacterFromObject(object);
+                return (T)CharacterFromObject(object);
             case Short:
-                return ShortFromObject(object);
+                return (T)ShortFromObject(object);
             case Integer:
-                return IntegerFromObject(object);
+                return (T)IntegerFromObject(object);
             case Long:
-                return LongFromObject(object);
+                return (T)LongFromObject(object);
             case Float:
-                return FloatFromObject(object);
+                return (T)FloatFromObject(object);
             case Double:
-                return DoubleFromObject(object);
+                return (T)DoubleFromObject(object);
             case Date:
-                return DateFromObject(object);
+                return (T)DateFromObject(object);
             case Enum:
-                return EnumFromObject(object);
+                return (T)EnumFromObject(object);
             case BigInteger:
-                return BigIntegerFromObject(object);
+                return (T)BigIntegerFromObject(object);
             case BigDecimal:
-                return BigDecimalFromObject(object);
+                return (T)BigDecimalFromObject(object);
             default:
                 throw new java.lang.IllegalStateException("Unrecognized type "+type.name());
             }
