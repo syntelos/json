@@ -29,6 +29,7 @@ import java.util.Iterator;
  */	
 public class ArrayJson
     extends Json
+    implements Iterable<Json>
 {
     private List<Json> list = new ArrayList<Json>();
 
@@ -50,6 +51,10 @@ public class ArrayJson
     }
 		
 
+    public java.util.Iterator<Json> iterator(){
+
+        return this.list.iterator();
+    }
     public boolean isNull(){
         return (0 == list.size());
     }

@@ -26,6 +26,7 @@ import lxl.Map;
  */
 public class ObjectJson
     extends Json
+    implements Iterable<Json>
 {
     private Map<String, Json> object = new Map();
 
@@ -64,6 +65,10 @@ public class ObjectJson
     }
 
 
+    public java.util.Iterator<Json> iterator(){
+
+        return this.object.iterator();
+    }
     public boolean isNull(){
         return (0 == object.size());
     }
