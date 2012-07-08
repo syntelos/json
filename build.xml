@@ -27,6 +27,7 @@
     </fileset>
   </path>
 
+
   <target name="jar" depends="compile">
 
     <delete>
@@ -110,9 +111,18 @@
   </target>
 
   <target name="test" depends="test.jar">
-
-    <java jar="${test.target.jar}" fork="true">
-      <arg value="test"/>
+    <echo>
+      -- 
+      -- Test StreamRead
+      -- 
+    </echo>
+    <java dir="test" fork="true"
+          classname="StreamRead">
+      <classpath>
+        <path refid="lib.path"/>        
+        <pathelement location="${target.jar}"/>
+        <pathelement location="${test.target.jar}"/>
+      </classpath>
     </java>
 
   </target>
@@ -125,11 +135,7 @@
       </fileset>
     </delete>
 
-    <jar jarfile="${test.target.jar}" basedir="test/bin" manifest="test/src/Manifest.mf">
-
-      <zipfileset src="${target.jar}"/>
-      <!-- zipfileset src="${toString:lib.lxl}"/ -->
-    </jar>
+    <jar jarfile="${test.target.jar}" basedir="test/bin" />
 
     <delete>
       <fileset dir="test/bin">
@@ -143,7 +149,12 @@
 
     <mkdir dir="test/bin"/>
 
-    <javac srcdir="test/src" destdir="test/bin" classpath="${target.jar}" debug="true" includeantruntime="false" source="${compiler.source}" target="${compiler.target}" encoding="${compiler.encoding}">
+    <javac srcdir="test/src" destdir="test/bin" debug="true" includeantruntime="false" source="${compiler.source}" target="${compiler.target}" encoding="${compiler.encoding}">
+
+      <classpath>
+        <path refid="lib.path"/>        
+        <pathelement location="${target.jar}"/>
+      </classpath>
 
       <include name="**/*.java"/>
     </javac>

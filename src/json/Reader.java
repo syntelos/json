@@ -20,6 +20,7 @@
  */
 package json;
 
+import java.io.InputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -138,6 +139,11 @@ public class Reader
     public <T> T read(String string) 
     {
         return read(new StringCharacterIterator(string), FIRST);
+    }
+    public <T> T read(InputStream stream) 
+        throws IOException
+    {
+        return read(new StreamCharacterIterator(stream), FIRST);
     }
 
     @SuppressWarnings("unchecked")

@@ -29,7 +29,8 @@ package json;
  */
 public abstract class Json
     extends Object
-    implements Cloneable
+    implements Cloneable,
+               Comparable<Json>
 {
     public static Json Decode(String json){
 
@@ -476,6 +477,8 @@ public abstract class Json
         return this.toString(false,d);
     }
     public abstract String toString(final boolean child, final int d);
+
+    public abstract int compareTo(Json json);
 
     public final static boolean Use(Primitive p){
         return (null != p);

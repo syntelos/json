@@ -63,4 +63,31 @@ public class StringJson
     {			
         return (x instanceof StringJson) && ((StringJson)x).val.equals(val); 
     }		
+    public int compareTo(Json that){
+        if (this == that)
+            return 0;
+        else if (null == that)
+            return +1;
+        else if (this.isNull()){
+
+            if (that.isNull())
+
+                return 0;
+            else
+                return -1;
+        }
+        else if (that.isNull()){
+
+            return +1;
+        }
+        else if (that instanceof StringJson){
+            String thatVal = ((StringJson)that).val;
+
+            String thisVal = this.val;
+
+            return thisVal.compareTo(thatVal);
+        }
+        else 
+            return this.getClass().getName().compareTo(that.getClass().getName());
+    }
 }

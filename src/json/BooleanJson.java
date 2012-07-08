@@ -53,5 +53,23 @@ public class BooleanJson
     public boolean equals(Object x)
     {
         return x instanceof BooleanJson && ((BooleanJson)x).val == val;
-    }		
+    }
+    public int compareTo(Json that){
+        if (this == that)
+            return 0;
+        else if (null == that)
+            return +1;
+        else if (that instanceof BooleanJson){
+            boolean thatVal = ((BooleanJson)that).val;
+
+            if (this.val == thatVal)
+                return 0;
+            else if (this.val)
+                return +1;
+            else
+                return -1;
+        }
+        else 
+            return this.getClass().getName().compareTo(that.getClass().getName());
+    }
 }

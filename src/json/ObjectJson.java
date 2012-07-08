@@ -226,4 +226,29 @@ public class ObjectJson
     {			
         return (x instanceof ObjectJson) && ((ObjectJson)x).object.equals(object); 
     }				
+    public int compareTo(Json that){
+        if (this == that)
+            return 0;
+        else if (null == that)
+            return +1;
+        else if (this.isNull()){
+
+            if (that.isNull())
+
+                return 0;
+            else
+                return -1;
+        }
+        else if (that.isNull()){
+
+            return +1;
+        }
+        else if (that instanceof ObjectJson){
+
+            return this.object.compareTo( ((ObjectJson)that).object);
+        }
+        else 
+            return this.getClass().getName().compareTo(that.getClass().getName());
+    }
+
 }

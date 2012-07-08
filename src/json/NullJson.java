@@ -49,4 +49,14 @@ public class NullJson
 
         return (x instanceof NullJson);
     }
+    public int compareTo(Json that){
+        if (this == that)
+            return 0;
+        else if (null == that)
+            return +1;
+        else if (that instanceof NullJson)
+            return 0;
+        else 
+            return this.getClass().getName().compareTo(that.getClass().getName());
+    }
 }

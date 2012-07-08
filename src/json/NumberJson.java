@@ -25,6 +25,45 @@ package json;
 public class NumberJson
     extends Json
 {
+    /**
+     * Comparison to capture equivalent representations of a number.
+     * Negative zero is equivalent to positive zero.
+     */
+    public final static boolean Equals(Number a, Number b){
+        final boolean aInt = (a instanceof Byte || a instanceof Short || a instanceof Integer || a instanceof Long);
+        final boolean bInt = (b instanceof Byte || b instanceof Short || b instanceof Integer || b instanceof Long);
+
+        if (aInt && bInt){
+
+            return (a.longValue() == b.longValue());
+        }
+        else {
+
+            final double aVal = a.doubleValue();
+            final double bVal = b.doubleValue();
+            /*
+             * includes (+0.0 == -0.0)
+             */
+            if (aVal == bVal)
+
+                return true;
+            /*
+             * check rounding / representation
+             */
+            else if (Math.signum(aVal) == Math.signum(bVal)){
+                /*
+                 * consistent for order of operands
+                 */
+                final double xulp = Math.max(Math.ulp(aVal),Math.ulp(bVal));
+
+                return (Math.abs(aVal-bVal) > xulp);
+            }
+            else
+                return false;
+        }
+    }
+
+
     private Number val;
 
 
@@ -57,8 +96,52 @@ public class NumberJson
             return val.toString();
     }
     public int hashCode() { return val.hashCode(); }
-    public boolean equals(Object x)
+    public boolean equals(Object that)
     {			
-        return (x instanceof NumberJson) && ((NumberJson)x).val.equals(val); 
+        if (this == that)
+            return true;
+        else if (null == that)
+            return false;
+
+        else if (that instanceof NumberJson)
+
+            return Equals(this.val, ((NumberJson)that).val);
+        else 
+            return false;
     }				
+    public int compareTo(Json that){
+        if (this == that)
+            return 0;
+        else if (null == that)
+            return +1;
+        else if (this.isNull()){
+
+            if (that.isNull())
+
+                return 0;
+            else
+                return -1;
+        }
+        else if (that.isNull()){
+
+            return +1;
+        }
+        else if (that instanceof NumberJson){
+
+            final Number thisVal = this.val;
+            final Number thatVal = ((NumberJson)that).val;
+
+            if (Equals(thisVal,thatVal))
+                return 0;
+            else {
+                final Double thisD = thisVal.doubleValue();
+                final Double thatD = thatVal.doubleValue();
+
+                return thisD.compareTo(thatD);
+            }
+        }
+        else 
+            return this.getClass().getName().compareTo(that.getClass().getName());
+    }
+
 }
