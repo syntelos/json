@@ -22,6 +22,7 @@ package json;
 import lxl.ArrayList;
 import lxl.List;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 
 /**
@@ -88,7 +89,95 @@ public class ArrayJson
                     return po.equals(value);
             }
         }
-    }       		
+    }
+    public <T> T getValue(Class<T> clas){
+        Class componentClass;
+        if (clas.isArray())
+            componentClass = clas.getComponentType();
+        else
+            componentClass = clas; // hope for the best? (lhs is Object)
+
+        final int count = this.list.size();
+        Object re;
+
+        if (componentClass.isPrimitive()){
+
+            if (java.lang.Boolean.TYPE.equals(componentClass)){
+                boolean[] list = new boolean[count];
+                for (int cc = 0; cc < count; cc++){
+                    Boolean value = (Boolean)this.list.get(cc).getValue(componentClass);
+                    list[cc] = value.booleanValue();
+                }
+                re = list;
+            }
+            else if (java.lang.Character.TYPE.equals(componentClass)){
+                char[] list = new char[count];
+                for (int cc = 0; cc < count; cc++){
+                    Character value = (Character)this.list.get(cc).getValue(componentClass);
+                    list[cc] = value.charValue();
+                }
+                re = list;
+            }
+            else if (java.lang.Byte.TYPE.equals(componentClass)){
+                byte[] list = new byte[count];
+                for (int cc = 0; cc < count; cc++){
+                    Byte value = (Byte)this.list.get(cc).getValue(componentClass);
+                    list[cc] = value.byteValue();
+                }
+                re = list;
+            }
+            else if (java.lang.Short.TYPE.equals(componentClass)){
+                short[] list = new short[count];
+                for (int cc = 0; cc < count; cc++){
+                    Short value = (Short)this.list.get(cc).getValue(componentClass);
+                    list[cc] = value.shortValue();
+                }
+                re = list;
+            }
+            else if (java.lang.Integer.TYPE.equals(componentClass)){
+                int[] list = new int[count];
+                for (int cc = 0; cc < count; cc++){
+                    Integer value = (Integer)this.list.get(cc).getValue(componentClass);
+                    list[cc] = value.intValue();
+                }
+                re = list;
+            }
+            else if (java.lang.Long.TYPE.equals(componentClass)){
+                long[] list = new long[count];
+                for (int cc = 0; cc < count; cc++){
+                    Long value = (Long)this.list.get(cc).getValue(componentClass);
+                    list[cc] = value.longValue();
+                }
+                re = list;
+            }
+            else if (java.lang.Float.TYPE.equals(componentClass)){
+                float[] list = new float[count];
+                for (int cc = 0; cc < count; cc++){
+                    Float value = (Float)this.list.get(cc).getValue(componentClass);
+                    list[cc] = value.floatValue();
+                }
+                re = list;
+            }
+            else if (java.lang.Double.TYPE.equals(componentClass)){
+                double[] list = new double[count];
+                for (int cc = 0; cc < count; cc++){
+                    Double value = (Double)this.list.get(cc).getValue(componentClass);
+                    list[cc] = value.doubleValue();
+                }
+                re = list;
+            }
+            else
+                throw new IllegalStateException(clas.getName());
+        }
+        else {
+            Object[] list = (Object[])Array.newInstance(componentClass,count);
+            for (int cc = 0; cc < count; cc++){
+                list[cc] = this.list.get(cc).getValue(componentClass);
+            }
+            re = list;
+        }
+        return (T)re;
+    }
     public Object getValue() { return list; }
     public boolean isArray() { return true; }
     public Json at(int index) { return list.get(index); }
