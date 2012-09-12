@@ -40,6 +40,12 @@ public class BooleanJson
     public boolean asBoolean() { return val; }		
     public boolean isBoolean() { return true;	}		
 
+    public Object getValue(){
+        if (val)
+            return Boolean.TRUE;
+        else
+            return Boolean.FALSE;
+    }
     public String toString(final boolean child, final int d){
         Boolean val = this.val;
         if (null == val)

@@ -39,6 +39,9 @@ public class NullJson
     public boolean isNull() {
         return true;
     }
+    public Object getValue(){
+        return null;
+    }
     public String toString(final boolean child, final int d){
         return "null";
     }
