@@ -25,14 +25,21 @@ import java.lang.reflect.Method;
 /**
  * <h3>Methods</h3>
  * 
- * <p> An implementor returns JSON class instance from toJson method,
- * and may throw an unsupported operation exception from the fromJson
- * method. </p>
+ * <p> An implementor returns JSON class instance from {@link #toJson
+ * toJson} method, and may throw an unsupported operation exception
+ * from the {@link #fromJson fromJson} method. </p>
  * 
- * <h3>Constructor</h3>
+ * <h3>Builder Constructor</h3>
  * 
- * <p> An implementor must always define a public constructor with one
- * Json parameter. </p>
+ * <p> An implementor shall define a public constructor with one Json
+ * parameter for construction within Builder protocol. </p>
+ * 
+ * <h3>Simple Constructor</h3>
+ * 
+ * <p> An implementor may define a public constructor with no
+ * arguments for the external application of Builder protocol.  This
+ * permits application specific initialization to occur before
+ * application defined building from JSON. </p>
  * 
  * @author John Pritchard
  */		
@@ -48,16 +55,102 @@ public interface Builder
         public Immutable(){
             super();
         }
-
+        /**
+         * Builder constructor protocol
+         */
         public final static <T extends Builder> T Construct(Class<T> clas, Json model){
             try {
+                /*
+                 * Option permitting a JSON Object to specify a java
+                 * class binding via a field named "class" or
+                 * "class-java".
+                 * 
+                 * The java class binding is a subclass of the
+                 * argument class.
+                 * 
+                 * The application has called 
+                 * 
+                 *    json.getValue("name",Some.class)
+                 * 
+                 */
+                String opt = model.getValue("class");
+                boolean once = true;
+
+                if (null == opt){
+                    once = false;
+                    opt = model.getValue("class-java");
+                }
+
+                while (null != opt){
+                    try {
+                        Class opc = Class.forName(opt);
+
+                        if (clas.isAssignableFrom(opc)){
+
+                            clas = (Class<T>)opc;
+                        }
+                        break;
+                    }
+                    catch (Throwable ignore){
+                        //
+                        if (once){
+                            once = false;
+
+                            opt = model.getValue("class-java");
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+            catch (RuntimeException ignore){
+                //
+            }
+            try {
+                /*
+                 * Return a new instance constructed on Builder protocol
+                 */
                 Constructor<T> ctor = clas.getConstructor(Json.class);
 
                 return ctor.newInstance(model);
             }
             catch (NoSuchMethodException exc){
+                /*
+                 * Return a new instance without applying Builder protocol
+                 */
+                try {
+                    Constructor<T> ctor = clas.getConstructor();
 
-                throw new IllegalStateException(clas.getName(),exc);
+                    return ctor.newInstance();
+                }
+                catch (NoSuchMethodException x){
+
+                    throw new IllegalStateException(clas.getName(),x);
+                }
+                catch (SecurityException x){
+
+                    throw new IllegalStateException(clas.getName(),x);
+                }
+                catch (InstantiationException x){
+
+                    throw new IllegalStateException(clas.getName(),x);
+                }
+                catch (IllegalAccessException x){
+
+                    throw new IllegalStateException(clas.getName(),x);
+                }
+                catch (IllegalArgumentException x){
+
+                    throw new IllegalStateException(clas.getName(),x);
+                }
+                catch (InvocationTargetException x){
+
+                    Throwable target = x.getCause();
+                    if (null != target)
+                        throw new IllegalStateException(clas.getName(),target);
+                    else
+                        throw new IllegalStateException(clas.getName(),x);
+                }
             }
             catch (SecurityException exc){
 
