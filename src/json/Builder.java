@@ -74,10 +74,10 @@ public interface Builder
                  * 
                  */
                 String opt = model.getValue("class");
-                boolean once = true;
+                boolean second = true;
 
                 if (null == opt){
-                    once = false;
+                    second = false;
                     opt = model.getValue("class-java");
                 }
 
@@ -93,8 +93,8 @@ public interface Builder
                     }
                     catch (Throwable ignore){
                         //
-                        if (once){
-                            once = false;
+                        if (second){
+                            second = false;
 
                             opt = model.getValue("class-java");
                         }
