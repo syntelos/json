@@ -348,12 +348,12 @@ public abstract class Json
             }
             else if (Builder.class.isAssignableFrom(clas)){
 
-                return Builder.Immutable.Construct( clas, this);
+                return Builder.Immutable.ConstructJson( clas, this);
             }
             else if (value instanceof String)
-                return Builder.Immutable.Construct( clas, (String)value);
+                return Builder.Immutable.ConstructString( clas, (String)value);
             else
-                return Builder.Immutable.Construct( clas, value);
+                return Builder.Immutable.ConstructObject( clas, value);
         }
     }
     public <T> T getValue(String name){ throw new UnsupportedOperationException(); }

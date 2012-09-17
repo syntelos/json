@@ -58,7 +58,7 @@ public interface Builder
         /**
          * Builder constructor protocol
          */
-        public final static <T extends Builder> T Construct(Class<T> clas, Json model){
+        public final static <T> T ConstructJson(Class<T> clas, Json model){
             try {
                 /*
                  * Option permitting a JSON Object to specify a java
@@ -177,7 +177,7 @@ public interface Builder
                     throw new IllegalStateException(clas.getName(),exc);
             }
         }
-        public final static <T> T Construct(Class<T> clas, String model){
+        public final static <T> T ConstructString(Class<T> clas, String model){
             if (java.lang.Enum.class.isAssignableFrom(clas)){
                 try {
                     Method valueOf = clas.getMethod("valueOf",String.class);
@@ -245,7 +245,7 @@ public interface Builder
                 }
             }
         }
-        public final static <T> T Construct(Class<T> clas, Object model){
+        public final static <T> T ConstructObject(Class<T> clas, Object model){
             try {
                 Constructor<T> ctor = clas.getConstructor(model.getClass());
 
