@@ -62,9 +62,91 @@ public abstract class Json
         else if (object instanceof Iterable)
             return new ArrayJson( (Iterable)object);
 
-        else if (object.getClass().isArray())
-            return new ArrayJson((Object[])object);
+        else if (object.getClass().isArray()){
 
+            Class component = object.getClass().getComponentType();
+
+            if (component.isPrimitive()){
+                if (java.lang.Boolean.TYPE == component){
+                    final boolean[] in = (boolean[])object;
+                    final int len = in.length;
+                    final Boolean[] out = new Boolean[len];
+                    for (int cc = 0; cc < len; cc++){
+                        out[cc] = in[cc];
+                    }
+                    return new ArrayJson((Object[])out);
+                }
+                else if (java.lang.Character.TYPE == component){
+                    final char[] in = (char[])object;
+                    final int len = in.length;
+                    final Character[] out = new Character[len];
+                    for (int cc = 0; cc < len; cc++){
+                        out[cc] = in[cc];
+                    }
+                    return new ArrayJson((Object[])out);
+                }
+                else if (java.lang.Byte.TYPE == component){
+                    final byte[] in = (byte[])object;
+                    final int len = in.length;
+                    final Byte[] out = new Byte[len];
+                    for (int cc = 0; cc < len; cc++){
+                        out[cc] = in[cc];
+                    }
+                    return new ArrayJson((Object[])out);
+                }
+                else if (java.lang.Short.TYPE == component){
+                    final short[] in = (short[])object;
+                    final int len = in.length;
+                    final Short[] out = new Short[len];
+                    for (int cc = 0; cc < len; cc++){
+                        out[cc] = in[cc];
+                    }
+                    return new ArrayJson((Object[])out);
+                }
+                else if (java.lang.Integer.TYPE == component){
+                    final int[] in = (int[])object;
+                    final int len = in.length;
+                    final Integer[] out = new Integer[len];
+                    for (int cc = 0; cc < len; cc++){
+                        out[cc] = in[cc];
+                    }
+                    return new ArrayJson((Object[])out);
+                }
+                else if (java.lang.Long.TYPE == component){
+                    final long[] in = (long[])object;
+                    final int len = in.length;
+                    final Long[] out = new Long[len];
+                    for (int cc = 0; cc < len; cc++){
+                        out[cc] = in[cc];
+                    }
+                    return new ArrayJson((Object[])out);
+                }
+                else if (java.lang.Float.TYPE == component){
+                    final float[] in = (float[])object;
+                    final int len = in.length;
+                    final Float[] out = new Float[len];
+                    for (int cc = 0; cc < len; cc++){
+                        out[cc] = in[cc];
+                    }
+                    return new ArrayJson((Object[])out);
+                }
+                else if (java.lang.Double.TYPE == component){
+                    final double[] in = (double[])object;
+                    final int len = in.length;
+                    final Double[] out = new Double[len];
+                    for (int cc = 0; cc < len; cc++){
+                        out[cc] = in[cc];
+                    }
+                    return new ArrayJson((Object[])out);
+                }
+                else {
+                    throw new IllegalStateException(component.getName());
+                }
+            }
+            else {
+                return new ArrayJson((Object[])object);
+            }
+        }
         else if (object instanceof lxl.Map)
             return new ObjectJson( (lxl.Map)object);
 
