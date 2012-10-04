@@ -37,51 +37,45 @@ package json;
  */
 public enum Primitive {
     String(java.lang.String.class),
-    Boolean(java.lang.Boolean.class),
-    Byte(java.lang.Byte.class),
-    Character(java.lang.Character.class),
-    Short(java.lang.Short.class),
-    Integer(java.lang.Integer.class), 
-    Long(java.lang.Long.class),
-    Float(java.lang.Float.class),
-    Double(java.lang.Double.class),
+    Boolean(java.lang.Boolean.class,java.lang.Boolean.TYPE),
+    Byte(java.lang.Byte.class,java.lang.Byte.TYPE),
+    Character(java.lang.Character.class,java.lang.Character.TYPE),
+    Short(java.lang.Short.class,java.lang.Short.TYPE),
+    Integer(java.lang.Integer.class,java.lang.Integer.TYPE), 
+    Long(java.lang.Long.class,java.lang.Long.TYPE),
+    Float(java.lang.Float.class,java.lang.Float.TYPE),
+    Double(java.lang.Double.class,java.lang.Double.TYPE),
     Date(java.util.Date.class),
     Enum(java.lang.Enum.class),
     BigInteger(java.math.BigInteger.class),
     BigDecimal(java.math.BigDecimal.class);
 
 
-    public final Class type;
+    public final boolean dual;
 
-    public final Class[] exclude;
+    public final Class[] type;
 
     public final String full, pkg, local;
 
 
-    private Primitive(Class impl){
+    private Primitive(Class... impl){
         this.type = impl;
-        this.full = impl.getName();
-        this.exclude = null;
-        int idx = this.full.lastIndexOf('.');
-        this.pkg = this.full.substring(0,idx);
-        this.local = this.full.substring(idx+1);
-    }
-    private Primitive(Class impl, Class[] exclude){
-        this.type = impl;
-        this.full = impl.getName();
-        this.exclude = exclude;
-        int idx = this.full.lastIndexOf('.');
-        this.pkg = this.full.substring(0,idx);
-        this.local = this.full.substring(idx+1);
+        this.dual = (1 < impl.length);
+        this.full = impl[0].getName();
+        {
+            final int idx = this.full.lastIndexOf('.');
+            this.pkg = this.full.substring(0,idx);
+            this.local = this.full.substring(idx+1);
+        }
     }
 
 
     public String getName(){
-        return this.type.getName();
+        return this.type[0].getName();
     }
     public boolean isNumber(){
         switch(this){
-
+        case Byte:
         case Short:
         case Integer:
         case Long:
@@ -95,7 +89,7 @@ public enum Primitive {
     }
     public boolean isInteger(){
         switch(this){
-
+        case Byte:
         case Short:
         case Integer:
         case Long:
@@ -106,19 +100,11 @@ public enum Primitive {
         }
     }
     public boolean isAssignableFrom(Class type){
-        if (this.type.isAssignableFrom(type)){
-
-            if (null != this.exclude){
-                for (Class not: this.exclude){
-
-                    if (not.isAssignableFrom(type))
-                        return false;
-                }
-            }
-            return true;
+        for (Class tt: this.type){
+            if (tt.isAssignableFrom(type))
+                return true;
         }
-        else
-            return false;
+        return false;
     }
 
 
@@ -187,16 +173,15 @@ public enum Primitive {
     private final static java.util.Map<String,Primitive> Map = new java.util.HashMap<String,Primitive>();
     static {
         for (Primitive type : Primitive.values()){
-            String name = type.type.getName();
-            Primitive.Map.put(name,type);
-            Primitive.Map.put(name.toLowerCase(),type);
-            switch(type){
-            case Boolean:
-                Primitive.Map.put("bool",type);
-                break;
-            case Integer:
-                Primitive.Map.put("int",type);
-                break;
+            for (Class clas: type.type){
+                final String name = clas.getName();
+                final String lname = name.toLowerCase();
+
+                Primitive.Map.put(name,type);
+
+                if (!lname.equals(name)){
+                    Primitive.Map.put(lname,type);
+                }
             }
         }
     }
