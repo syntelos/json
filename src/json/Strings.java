@@ -64,6 +64,8 @@ public abstract class Strings {
                 return (T)DoubleFromString(string);
             case Date:
                 return (T)DateFromString(string);
+            case Enum:
+                return (T)EnumFromString(string);
             case BigInteger:
                 return (T)BigIntegerFromString(string);
             case BigDecimal:
